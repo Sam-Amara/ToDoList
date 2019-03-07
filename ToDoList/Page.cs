@@ -24,7 +24,7 @@ namespace ToDoList
             this.MaxPerPage = maxPerPage;
         }
 
-        public bool addTask(Task t)
+        public bool AddTask(Task t)
         {
             bool addedSuccessFully=false;
             if(Tasks.Count < this.MaxPerPage)
@@ -35,20 +35,25 @@ namespace ToDoList
             return addedSuccessFully;
         }
 
-        public int numberTasksCompleted()
+        public int NumberTasksCompleted()
         {
-            // To Do: return number of tasks with completed status
-            return 0; 
+            int count = 0;
+            foreach(var t in this.Tasks)
+            {
+                if (t.isCrossedOut)
+                {
+                    count++;
+                }
+            }
+
+            return count; 
         }
 
-        public int numberTasksOpen()
-        {
-            return numberTasks()-numberTasksCompleted();
-        }
+        public int NumberTasksOpen() => NumberTasks()-NumberTasksCompleted();
 
-        public int numberTasks()
-        {
-            return Tasks.Count;
-        }
+        public int NumberTasks() => Tasks.Count;
+
+        public bool IsFull() => (NumberTasksCompleted()==this.MaxPerPage);
+
     }
 }

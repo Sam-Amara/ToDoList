@@ -52,9 +52,6 @@ namespace ToDoList
                     case "2":
                         ViewTaskList();
                         break;
-                    case "q":
-                        myToDoList.SaveToFile();
-                        break;
                     default:
                         err = "Invalid choice. Try again!\n\n";
                         break;
@@ -64,6 +61,7 @@ namespace ToDoList
                 input = PromptForInput();
                 err = "";
             }
+            myToDoList.SaveToFile();
         }
 
         static void ViewTaskList()
@@ -80,7 +78,7 @@ namespace ToDoList
                 var tasks = myToDoList.Pages.ElementAt(currentPage).Tasks;
                 if (int.TryParse(input, out taskNumber) && ((taskNumber > 0 && taskNumber <= (tasks.Count))))
                 {
-                    if (!tasks[taskNumber - 1].Completed)
+                    if (!tasks[taskNumber - 1].isCrossedOut)
                     {
                         Console.WriteLine($"\nSelected Task #{taskNumber}: {tasks[taskNumber - 1].Name}");
                         Console.Write($"Enter \"Y\" to Cross-out, \"N\" to Re-enter or Blank to Abort: ");
@@ -93,7 +91,6 @@ namespace ToDoList
                         else if (input == "Y" || input == "y")
                         {
                             tasks[taskNumber - 1].CrossOut();
-
                         }
                     }
                 }
@@ -113,10 +110,15 @@ namespace ToDoList
                         currentPage = myToDoList.Pages.Count - 1;
                     }
                 }
-                else
+                else if (input == "")
                 {
                     break;
                 }
+
+                //if (myToDoList.Pages.ElementAt(currentPage).IsFull())
+                //{
+                //    myToDoList.RemovePage(currentPage);
+                //}
             }
         }
 

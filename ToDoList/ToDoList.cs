@@ -67,16 +67,22 @@ namespace ToDoList
             if (Pages.Count == 0)
             {
                 myPage = new Page();
-                myPage.addTask(myTask);
+                myPage.AddTask(myTask);
                 Pages.Add(myPage);
             }
-            else if (!(Pages.ElementAt(pagesCount-1).addTask(myTask)))
+            else if (!(Pages.ElementAt(pagesCount-1).AddTask(myTask)))
             {
                 myPage = new Page();
-                myPage.addTask(myTask);
+                myPage.AddTask(myTask);
                 Pages.Add(myPage);
             }
             this.TotalNumberOfTasks++;
+        }
+
+        public void RemovePage(int pageNumber)
+        {
+            Pages.RemoveAt(pageNumber);
+            this.TotalNumberOfTasks -= DefaultMaxPerPage;
         }
 
         public void DisplayPage(int pageNumber)
@@ -85,19 +91,18 @@ namespace ToDoList
             foreach (var t in Pages.ElementAt<Page>(pageNumber).Tasks)
             {
                 count++;
-                if (t.Completed)
+                if (t.isCrossedOut)
                 {
                     Console.ForegroundColor = ConsoleColor.DarkGray;
                     Console.WriteLine($"{count}. {t.Name}");
+                    Console.ResetColor();
                 }
                 else
                 {
-                    Console.ForegroundColor = ConsoleColor.White;
                     Console.WriteLine($"{count}. {t.Name}");
                 }
-                
             }
-            Console.ResetColor();
+            
         }
 
         public void SaveToFile()
@@ -107,7 +112,7 @@ namespace ToDoList
             {
                 foreach (var t in p.Tasks)
                 {
-                    if (t.Completed)
+                    if (t.isCrossedOut)
                     {
                         allTasks.Add($"{t.Name}{recordSeparator}{t.DateAdded}{recordSeparator}{t.DateCompleted}");
                     }
