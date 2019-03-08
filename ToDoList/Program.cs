@@ -67,6 +67,17 @@ namespace ToDoList
         static void ViewTaskList()
         {
             int currentPage = 0;
+
+            while ((currentPage < myToDoList.Pages.Count) && myToDoList.Pages[currentPage].IsFull())
+            {
+                currentPage++;
+            }
+
+            if (currentPage == myToDoList.Pages.Count)
+            {
+                currentPage--;
+            }
+
             while (true)
             { 
                 Console.Clear();
@@ -75,7 +86,7 @@ namespace ToDoList
                 Console.Write("\nEnter 'task#' to select, '>' next or '<' previous page, or blank to quit: ");
                 string input = Console.ReadLine();
                 int taskNumber;
-                var tasks = myToDoList.Pages.ElementAt(currentPage).Tasks;
+                var tasks = myToDoList.Pages[currentPage].Tasks;
                 if (int.TryParse(input, out taskNumber) && ((taskNumber > 0 && taskNumber <= (tasks.Count))))
                 {
                     if (!tasks[taskNumber - 1].isCrossedOut)
@@ -114,11 +125,6 @@ namespace ToDoList
                 {
                     break;
                 }
-
-                //if (myToDoList.Pages.ElementAt(currentPage).IsFull())
-                //{
-                //    myToDoList.RemovePage(currentPage);
-                //}
             }
         }
 
