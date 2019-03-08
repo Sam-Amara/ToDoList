@@ -36,7 +36,7 @@ namespace ToDoList
                     : $"Task list has {taskCount} task(s):\n\t1 - Add new task\n\t2 - View task list\n\tq - Save and quit\n\nChoice: ";
 
                 Console.Write(prompt);
-                return Console.ReadLine();
+                return Console.ReadLine().ToLower();
             }
 
             string input = PromptForInput();
@@ -68,38 +68,36 @@ namespace ToDoList
         {
             int currentPage = 0;
 
-            while ((currentPage < myToDoList.Pages.Count) && myToDoList.Pages[currentPage].IsFull())
+            while ((currentPage < myToDoList.Pages.Count -1 ) && myToDoList.Pages[currentPage].IsFull())
             {
                 currentPage++;
             }
 
-            if (currentPage == myToDoList.Pages.Count)
-            {
-                currentPage--;
-            }
-
             while (true)
             { 
-                Console.Clear();
-                Console.WriteLine($"Page {currentPage + 1} out of {myToDoList.Pages.Count}: ");
-                myToDoList.DisplayPage(currentPage);
-                Console.Write("\nEnter 'task#' to select, '>' next or '<' previous page, or blank to quit: ");
-                string input = Console.ReadLine();
-                int taskNumber;
                 var tasks = myToDoList.Pages[currentPage].Tasks;
+                int taskNumber;
+
+                Console.Clear();
+                Console.WriteLine($"Showing {tasks.Count} tasks out of {myToDoList.TotalNumberOfTasks}: \n");
+                myToDoList.DisplayPage(currentPage);
+                Console.WriteLine($"\nPage {currentPage + 1} out of {myToDoList.Pages.Count}");
+                Console.Write("\nEnter 'task#' to select, '>' next or '<' previous page, or blank to quit: ");
+                string input = Console.ReadLine().ToLower();
+
                 if (int.TryParse(input, out taskNumber) && ((taskNumber > 0 && taskNumber <= (tasks.Count))))
                 {
                     if (!tasks[taskNumber - 1].isCrossedOut)
                     {
                         Console.WriteLine($"\nSelected Task #{taskNumber}: {tasks[taskNumber - 1].Name}");
-                        Console.Write($"Enter \"Y\" to Cross-out, \"N\" to Re-enter or Blank to Abort: ");
-                        input = Console.ReadLine();
-                        if (input == "N" || input == "n")
+                        Console.Write($"Enter \"Y\" to Cross-out, \"N\" to Re-enter, or Blank to Abort: ");
+                        input = Console.ReadLine().ToLower();
+                        if (input == "n")
                         {
                             tasks[taskNumber - 1].CrossOut();
                             myToDoList.addNewTask(tasks[taskNumber - 1].Name);
                         }
-                        else if (input == "Y" || input == "y")
+                        else if (input == "y")
                         {
                             tasks[taskNumber - 1].CrossOut();
                         }
@@ -119,6 +117,18 @@ namespace ToDoList
                     if (currentPage < 0)
                     {
                         currentPage = myToDoList.Pages.Count - 1;
+                    }
+                }
+                else if (input == "d")
+                {
+                    if (currentPage == 0)
+                    {
+                        Console.Write($"Enter \"Y\" to permanentely Delete page, or any other key to Abort: ");
+                        input = Console.ReadLine().ToLower();
+                        if ((input == "y") && (myToDoList.Pages[currentPage].IsFull()))
+                        {
+                            myToDoList.RemovePage(currentPage);
+                        }
                     }
                 }
                 else if (input == "")
