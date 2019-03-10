@@ -40,7 +40,7 @@ namespace ToDoList
                         myTask = new Task(stringToTask[0], DateTime.Parse(stringToTask[1]), DateTime.Parse(stringToTask[2]));
                         break;
                     default:
-                        throw new Exception("Unexpected Task Format");
+                        throw new Exception("Unexpected File Format, Delete File and Restart Program.");
                 }
                 myTaskList.Add(myTask);
 
